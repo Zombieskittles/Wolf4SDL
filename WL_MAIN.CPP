@@ -49,6 +49,10 @@ extern byte signon[];
 =============================================================================
 */
 
+#ifdef EXTRACONTROLS
+boolean     mousemoveenabled;
+#endif // EXTRACONTROLS
+
 char    str[80];
 int     dirangle[9] = {0,ANGLES/8,2*ANGLES/8,3*ANGLES/8,4*ANGLES/8,
                        5*ANGLES/8,6*ANGLES/8,7*ANGLES/8,ANGLES};
@@ -157,6 +161,7 @@ void ReadConfig(void)
         read(file,&sds,sizeof(sds));
 
         read(file,&mouseenabled,sizeof(mouseenabled));
+#ifndef EXTRACONTROLS // EXTRACONTROLS
         read(file,&joystickenabled,sizeof(joystickenabled));
         boolean dummyJoypadEnabled;
         read(file,&dummyJoypadEnabled,sizeof(dummyJoypadEnabled));
@@ -164,14 +169,20 @@ void ReadConfig(void)
         read(file,&dummyJoystickProgressive,sizeof(dummyJoystickProgressive));
         int dummyJoystickPort = 0;
         read(file,&dummyJoystickPort,sizeof(dummyJoystickPort));
-
+#endif
         read(file,dirscan,sizeof(dirscan));
         read(file,buttonscan,sizeof(buttonscan));
         read(file,buttonmouse,sizeof(buttonmouse));
+#ifndef EXTRACONTROLS
         read(file,buttonjoy,sizeof(buttonjoy));
-
+#endif
         read(file,&viewsize,sizeof(viewsize));
         read(file,&mouseadjustment,sizeof(mouseadjustment));
+#ifdef EXTRACONTROLS
+        read(file,&mousemoveenabled,sizeof(mousemoveenabled));
+        boolean dummyMouseMoveEnabled;
+        read(file,&dummyMouseMoveEnabled,sizeof(dummyMouseMoveEnabled));
+#endif
 
         close(file);
 
@@ -189,9 +200,17 @@ void ReadConfig(void)
 
         if(mouseenabled) mouseenabled=true;
         if(joystickenabled) joystickenabled=true;
+#ifdef EXTRACONTROLS
+        if(mousemoveenabled) mousemoveenabled=true;
+#endif // EXTRACONTROLS
 
         if (!MousePresent)
+        {
             mouseenabled = false;
+#ifdef EXTRACONTROLS
+            mousemoveenabled = false;
+#endif
+        }
         if (!IN_JoyPresent())
             joystickenabled = false;
 
@@ -227,7 +246,12 @@ noconfig:
             sds = sds_Off;
 
         if (MousePresent)
+        {
             mouseenabled = true;
+#ifdef EXTRACONTROLS
+            mousemoveenabled = true;
+#endif
+        }
 
         if (IN_JoyPresent())
             joystickenabled = true;
@@ -274,6 +298,7 @@ void WriteConfig(void)
         write(file,&DigiMode,sizeof(DigiMode));
 
         write(file,&mouseenabled,sizeof(mouseenabled));
+#ifndef EXTRACONTROLS
         write(file,&joystickenabled,sizeof(joystickenabled));
         boolean dummyJoypadEnabled = false;
         write(file,&dummyJoypadEnabled,sizeof(dummyJoypadEnabled));
@@ -281,14 +306,18 @@ void WriteConfig(void)
         write(file,&dummyJoystickProgressive,sizeof(dummyJoystickProgressive));
         int dummyJoystickPort = 0;
         write(file,&dummyJoystickPort,sizeof(dummyJoystickPort));
-
+#endif
         write(file,dirscan,sizeof(dirscan));
         write(file,buttonscan,sizeof(buttonscan));
         write(file,buttonmouse,sizeof(buttonmouse));
+#ifndef EXTRACONTROLS
         write(file,buttonjoy,sizeof(buttonjoy));
-
+#endif
         write(file,&viewsize,sizeof(viewsize));
         write(file,&mouseadjustment,sizeof(mouseadjustment));
+#ifdef EXTRACONTROLS
+        write(file,&mousemoveenabled,sizeof(mousemoveenabled));
+#endif // EXTRACONTROLS
 
         close(file);
     }

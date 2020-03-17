@@ -52,8 +52,16 @@ unsigned tics;
 //
 boolean mouseenabled, joystickenabled;
 int dirscan[4] = { sc_UpArrow, sc_RightArrow, sc_DownArrow, sc_LeftArrow };
+
+#ifndef EXTRACONTROLS
 int buttonscan[NUMBUTTONS] = { sc_Control, sc_Alt, sc_LShift, sc_Space, sc_1, sc_2, sc_3, sc_4 };
+#else
+int extrascan[4] = { sc_A, sc_D, sc_6, sc_7 };
+int buttonscan[NUMBUTTONS] = { sc_Control, sc_Alt, sc_LShift, sc_Space, sc_1, sc_2, sc_3, sc_4, sc_A, sc_D, sc_6, sc_7  };
+#endif // EXTRACONTROLS
+
 int buttonmouse[4] = { bt_attack, bt_strafe, bt_use, bt_nobutton };
+
 int buttonjoy[32] = {
 #ifdef _arch_dreamcast
     bt_attack, bt_strafe, bt_use, bt_run, bt_esc, bt_prevweapon, bt_nobutton, bt_nextweapon,
@@ -78,6 +86,10 @@ memptr demobuffer;
 // current user input
 //
 int controlx, controly;         // range from -100 to 100 per tic
+
+#ifdef EXTRACONTROLS
+int controlstrafe;
+#endif // EXTRACONTROLS
 boolean buttonstate[NUMBUTTONS];
 
 int lastgamemusicoffset = 0;
@@ -284,7 +296,7 @@ void PollMouseButtons (void)
 }
 
 
-
+#ifndef EXTRACONTROLS
 /*
 ===================
 =
@@ -303,7 +315,7 @@ void PollJoystickButtons (void)
             buttonstate[buttonjoy[i]] = true;
     }
 }
-
+#endif
 
 /*
 ===================
@@ -341,17 +353,23 @@ void PollMouseMove (void)
     int mousexmove, mouseymove;
 
     SDL_GetMouseState(&mousexmove, &mouseymove);
-    if(IN_IsInputGrabbed())
-        IN_CenterMouse();
-
+        if(IN_IsInputGrabbed())
+            IN_CenterMouse();
     mousexmove -= screenWidth / 2;
     mouseymove -= screenHeight / 2;
 
     controlx += mousexmove * 10 / (13 - mouseadjustment);
+#ifndef EXTRACONTROLS
     controly += mouseymove * 20 / (13 - mouseadjustment);
+#else
+    if (mousemoveenabled)
+    {
+        controly += mouseymove * 20 / (13 - mouseadjustment);
+    }
+#endif
 }
 
-
+#ifndef EXRACONTROLS
 /*
 ===================
 =
@@ -377,7 +395,7 @@ void PollJoystickMove (void)
     else if (joyy < -64 || buttonstate[bt_moveforward])
         controly -= delta;
 }
-
+#endif
 /*
 ===================
 =
@@ -458,8 +476,10 @@ void PollControls (void)
     if (mouseenabled && IN_IsInputGrabbed())
         PollMouseButtons ();
 
+#ifndef EXTRACONTROLS
     if (joystickenabled)
         PollJoystickButtons ();
+#endif
 
 //
 // get movements
@@ -468,10 +488,10 @@ void PollControls (void)
 
     if (mouseenabled && IN_IsInputGrabbed())
         PollMouseMove ();
-
+#ifndef EXRACONTROLS
     if (joystickenabled)
         PollJoystickMove ();
-
+#endif
 //
 // bound movement to a maximum
 //

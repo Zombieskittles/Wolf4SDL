@@ -180,6 +180,13 @@ void PrintCustJoy(int i);
 void PrintCustKeybd(int i);
 void PrintCustKeys(int i);
 
+#ifdef EXTRACONTROLS
+void DefineKeyExtra(void);
+
+void DrawCustExtra (int hilight);
+void PrintCustExtra (int i);
+#endif // EXTRACONTROLS
+
 void PrintLSEntry(int w,int color);
 void TrackWhichGame(int w);
 void DrawNewGameDiff(int w);
@@ -203,8 +210,11 @@ void CheckForEpisodes(void);
 
 void FreeMusic(void);
 
-
+#ifndef EXTRACONTROLS
 enum {MOUSE,JOYSTICK,KEYBOARDBTNS,KEYBOARDMOVE};        // FOR INPUT TYPES
+#else
+enum {MOUSE,JOYSTICK,KEYBOARDBTNS,KEYBOARDMOVE, KEYBOARDEXTRA};        // FOR INPUT TYPES
+#endif
 
 enum menuitems
 {

@@ -827,12 +827,18 @@ enum
     bt_readypistol,
     bt_readymachinegun,
     bt_readychaingun,
+#ifdef EXTRACONTROLS
+    bt_strafeleft,
+    bt_straferight,
+#endif
     bt_nextweapon,
     bt_prevweapon,
     bt_esc,
     bt_pause,
+#ifndef EXTRACONTROLS
     bt_strafeleft,
     bt_straferight,
+#endif
     bt_moveforward,
     bt_movebackward,
     bt_turnleft,
@@ -1043,6 +1049,10 @@ extern  doorobj_t   doorobjlist[MAXDOORS];
 extern  doorobj_t   *lastdoorobj;
 extern  int         godmode;
 
+#ifdef EXTRACONTROLS
+extern  int         controlstrafe;
+#endif
+
 extern  boolean     demorecord,demoplayback;
 extern  int8_t      *demoptr, *lastdemoptr;
 extern  memptr      demobuffer;
@@ -1051,10 +1061,17 @@ extern  memptr      demobuffer;
 // control info
 //
 extern  boolean     mouseenabled,joystickenabled;
+#ifdef EXTRACONTROLS
+extern  boolean     mousemoveenabled;
+#endif
 extern  int         dirscan[4];
 extern  int         buttonscan[NUMBUTTONS];
 extern  int         buttonmouse[4];
 extern  int         buttonjoy[32];
+
+#ifdef EXTRACONTROLS
+extern  int         extrascan[4];
+#endif
 
 void    InitActorList (void);
 void    GetNewActor (void);
