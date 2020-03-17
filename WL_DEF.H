@@ -1069,10 +1069,6 @@ extern  int         buttonscan[NUMBUTTONS];
 extern  int         buttonmouse[4];
 extern  int         buttonjoy[32];
 
-#ifdef EXTRACONTROLS
-extern  int         extrascan[4];
-#endif
-
 void    InitActorList (void);
 void    GetNewActor (void);
 void    PlayLoop (void);

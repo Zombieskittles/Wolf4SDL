@@ -2455,8 +2455,7 @@ EnterCtrlData (int index, CustomCtrls * cust, void (*DrawRtn) (int), void (*Prin
                     case KEYBOARDEXTRA:
                         if (LastScan && LastScan != sc_Escape)
                         {
-                            //buttonscan[extraorder[which]+8] = LastScan;
-                            extrascan[extraorder[which]] = buttonscan[extraorder[which]+8] = LastScan;
+                            buttonscan[extraorder[which]+8] = LastScan;
                             picked = 1;
                             ShootSnd ();
                             IN_ClearKeysDown ();
